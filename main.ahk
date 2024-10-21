@@ -16,8 +16,12 @@
 
 /*
 - Opacity
-   - Win+ScrollUp = More
-   - Win+ScrollDown = Less
-   - Win+O = Reset
+	- Win+ScrollUp = More
+	- Win+ScrollDown = Less
+	- Win+O = Reset
 */
 #Include lib\WindowOpacity.ahk
+
+; Get IP and location info
+#Include lib\GetInfoIP.ahk
+IP_Check_Setup_TrayMenu()
