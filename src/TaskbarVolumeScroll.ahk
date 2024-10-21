@@ -2,7 +2,7 @@
 ; OSD is no longer needed, an OSD is built in Windows 10+
 ; https://www.autohotkey.com/board/topic/94165-simple-volume-osd/
 
-#HotIf MouseIsOver("ahk_class Shell_TrayWnd")
+#HotIf MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 
 WheelUp::Send "{Volume_Up}"
 WheelDown::Send "{Volume_Down}"
