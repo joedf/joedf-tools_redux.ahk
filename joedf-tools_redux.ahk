@@ -2,17 +2,17 @@
 #SingleInstance Force
 
 ; KDE style easy window drag and resize
-#Include lib\EasyWindowDragging_KDE.ahk
+#Include src\EasyWindowDragging_KDE.ahk
 
 ; Taskbar Volume scrolling
-#Include lib\TaskbarVolumeScroll.ahk
+#Include src\TaskbarVolumeScroll.ahk
 
 /*
 - Misc simple keybinds
 	- Ctrl+Space = toggle AlwaysOnTop for active window
 	- Shift+Win+C = open a new CMD window with the desktop path
 */
-#Include lib\MiscKeybinds.ahk
+#Include src\MiscKeybinds.ahk
 
 /*
 - Opacity
@@ -20,8 +20,8 @@
 	- Win+ScrollDown = Less
 	- Win+O = Reset
 */
-#Include lib\WindowOpacity.ahk
+#Include src\WindowOpacity.ahk
 
 ; Get IP and location info
-#Include lib\GetInfoIP.ahk
+#Include src\GetInfoIP.ahk
 IP_Check_Setup_TrayMenu()
