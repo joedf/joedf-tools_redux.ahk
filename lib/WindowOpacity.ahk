@@ -6,7 +6,7 @@
 DetectHiddenWindows true
 
 ; Avoid / reduce the interval warning
-A_MaxHotkeysPerInterval := 128
+A_MaxHotkeysPerInterval := 200
 
 ; maybe do the window under mouse instead of active window?
 ; MouseGetPos ,, &MouseWin
