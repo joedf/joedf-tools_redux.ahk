@@ -1,6 +1,8 @@
 ﻿#Requires AutoHotkey v2.0
 #SingleInstance Force
 
+TraySetIcon "logo.ico"
+
 ; KDE style easy window drag and resize
 #Include src\EasyWindowDragging_KDE.ahk
 
@@ -24,4 +26,15 @@
 
 ; Get IP and location info
 #Include src\GetInfoIP.ahk
+
+
+; Setup tray menu
+A_TrayMenu.Delete() ; clears the standard / default menu
 IP_Check_Setup_TrayMenu()
+A_TrayMenu.Add() ; Creates a separator line.
+A_TrayMenu.Add("About (webpage)", ShowAbout)
+ShowAbout(*) {
+	Run "https://github.com/joedf/joedf-tools_redux.ahk"
+}
+A_TrayMenu.Add()
+A_TrayMenu.AddStandard()

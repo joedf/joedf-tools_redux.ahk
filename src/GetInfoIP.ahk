@@ -94,9 +94,6 @@ IP_Check_Setup_TrayMenu() {
 	DoCopyIP(ItemName, ItemPos, MyMenu) {
 		return GetInfoIP.ExecuteCopy()
 	}
-	A_TrayMenu.Delete() ; clearn the standard / default menu
 	A_TrayMenu.Add("Show IP info", DoNotifyIP)
 	A_TrayMenu.Add("Copy IP (Public)", DoCopyIP)
-	A_TrayMenu.Add() ; Creates a separator line.
-	A_TrayMenu.AddStandard()
 }
