@@ -1,5 +1,5 @@
-# joedf-tools_redux
-My personal AHK power user utility scripts
+# <img src="logo.ico" width="48" /> joedf-tools_redux
+My personal AHK v2 power user utility scripts
 
 ## Features
 - Taskbar Volume scrolling
