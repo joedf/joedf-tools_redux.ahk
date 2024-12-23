@@ -27,6 +27,8 @@ TraySetIcon "logo.ico"
 ; Get IP and location info
 #Include src\GetInfoIP.ahk
 
+; Automatically self-suspend hotkeys if a given process is running.
+#Include src\AutoSuspendSelf.ahk
 
 ; Setup tray menu
 A_TrayMenu.Delete() ; clears the standard / default menu
