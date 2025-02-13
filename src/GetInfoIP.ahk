@@ -29,6 +29,33 @@ class IP_Check
 	__New(dataSourceUrl:="https://dazzlepod.com/ip/me") {
 		this.DATA_SOURCE_URL := dataSourceUrl
 		this.request := ComObject("Msxml2.XMLHTTP")
+		this.AttachTrayTipEvents()
+	}
+
+	AttachTrayTipEvents() {
+		; Based on code from https://www.autohotkey.com/boards/viewtopic.php?p=95185#p95185
+		OnMessage(0x404, ObjBindMethod(this, "__OnTrayTipEvent"))
+	}
+
+	__OnTrayTipEvent(wParam, lParam, msg, hwnd)
+	{
+		if (hwnd != A_ScriptHwnd)
+			return
+		if (lParam = 1029) ; NIN_BALLOONUSERCLICK
+		{
+			; MsgBox("Notification was left-clicked.")
+			; Show ip full info page
+			Run(this.DATA_SOURCE_URL)
+		}
+
+		if (lParam = 1028) ; NIN_BALLOONTIMEOUT
+		{
+			; MsgBox("Notification timed out or was closed or right-clicked.")
+		}
+	}
+
+	__OnHideTrayTip() {
+		TrayTip()
 	}
 
 	Execute(__readyFuncName:="Ready") {
@@ -76,7 +103,7 @@ class IP_Check
 
 	Present(text, timeMs:=5000, title:="IP Check Info") {
 		TrayTip text, title
-		SetTimer () => TrayTip(), -1 * Abs(timeMs)
+		SetTimer () => this.__OnHideTrayTip(), -1 * Abs(timeMs)
 	}
 }
 
