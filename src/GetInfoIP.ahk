@@ -26,7 +26,8 @@
 
 class IP_Check
 {
-	__New(dataSourceUrl:="https://dazzlepod.com/ip/me") {
+	; now offline? https://dazzlepod.com/ip/me
+	__New(dataSourceUrl:="http://ip-api.com/json/") {
 		this.DATA_SOURCE_URL := dataSourceUrl
 		this.request := ComObject("Msxml2.XMLHTTP")
 		this.AttachTrayTipEvents()
@@ -97,6 +98,13 @@ class IP_Check
 	Parse_to_Display_String(sJson) {
 		obj := JSON.parse(sJson)
 		localIPs := SysGetIPAddresses()
+
+		if (!obj.Has("ip")) {
+			if (obj.Has("query")) {
+				obj["ip"] := obj["query"]
+			}
+		}
+
 		out := "Public: " obj["ip"] "`nLocal: " localIPs[1] "`nLocation: " obj["city"] ", " obj["country"]
 		return out
 	}

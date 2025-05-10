@@ -5,6 +5,6 @@ My personal AHK v2 power user utility scripts
 - Taskbar Volume scrolling
 - KDE style window drag, move, and resize
 - Set active window opacity / transparency
-- Get public and local IP and location (dazzlepod.com/ip)
+- Get public and local IP and location (`ip-api.com/json` or `dazzlepod.com/ip`)
 - Automatically suspend hotkeys if a given process is running
 - Misc keybinds
