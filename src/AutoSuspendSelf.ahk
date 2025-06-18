@@ -8,6 +8,8 @@ SuspendCheckInterval := 5000 ;ms
 SuspendProcesses := [
 	"Warhammer 40000 Space Marine 2 - Retail.exe",
 	"helldivers2.exe",
+	"Marvel-Win64-Shipping.exe",
+	"Tabletop Simulator.exe",
 	; "notepad.exe"
 ]
 
