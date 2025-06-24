@@ -91,6 +91,14 @@ class IP_Check
 		if (this.request.status == 200) { ; OK.
 			sJson := this.request.responseText
 			obj := JSON.parse(sJson)
+
+			; depending on the service used, the key "query" maybe used instead of "ip"
+			if (!obj.Has("ip")) {
+				if (obj.Has("query")) {
+					obj["ip"] := obj["query"]
+				}
+			}
+
 			A_Clipboard := obj["ip"]
 		}
 	}
@@ -99,6 +107,7 @@ class IP_Check
 		obj := JSON.parse(sJson)
 		localIPs := SysGetIPAddresses()
 
+		; depending on the service used, the key "query" maybe used instead of "ip"
 		if (!obj.Has("ip")) {
 			if (obj.Has("query")) {
 				obj["ip"] := obj["query"]
