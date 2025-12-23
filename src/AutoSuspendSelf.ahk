@@ -10,6 +10,7 @@ SuspendProcesses := [
 	"helldivers2.exe",
 	"Marvel-Win64-Shipping.exe",
 	"Tabletop Simulator.exe",
+	"Sniper5_vulkan.exe",
 	; "notepad.exe"
 ]
 
