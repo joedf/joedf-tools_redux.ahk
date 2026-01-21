@@ -6,6 +6,7 @@
 ; by joedf - started October 21, 2024
 
 ; Example JSON output from dazzlepod.com/ip
+; and for ip-api.com/json it is similar, but uses the key "query" instead of "ip"
 /*
 {
 	"ip": "127.0.34.121",
@@ -24,10 +25,25 @@
 	}
 */
 
+; Example JSON output from ipv4-check-perf.radar.cloudflare.com/api/info
+/*
+{
+	"colo": "TXL",
+	"asn": 212238,
+	"continent": "EU",
+	"country": "DE",
+	"region": "State of Berlin",
+	"city": "Berlin",
+	"latitude": "52.52437",
+	"longitude": "13.41053",
+	"ip_address": "152.233.20.198",
+	"ip_version": "IPv4"
+}
+*/
+
 class IP_Check
 {
-	; now offline? https://dazzlepod.com/ip/me
-	__New(dataSourceUrl:="http://ip-api.com/json/") {
+	__New(dataSourceUrl:="https://ipv4-check-perf.radar.cloudflare.com/api/info") {
 		this.DATA_SOURCE_URL := dataSourceUrl
 		this.request := ComObject("Msxml2.XMLHTTP")
 		this.AttachTrayTipEvents()
@@ -91,13 +107,7 @@ class IP_Check
 		if (this.request.status == 200) { ; OK.
 			sJson := this.request.responseText
 			obj := JSON.parse(sJson)
-
-			; depending on the service used, the key "query" maybe used instead of "ip"
-			if (!obj.Has("ip")) {
-				if (obj.Has("query")) {
-					obj["ip"] := obj["query"]
-				}
-			}
+			this._ensure_ip_key(obj)
 
 			A_Clipboard := obj["ip"]
 		}
@@ -105,14 +115,8 @@ class IP_Check
 
 	Parse_to_Display_String(sJson) {
 		obj := JSON.parse(sJson)
+		this._ensure_ip_key(obj)
 		localIPs := SysGetIPAddresses()
-
-		; depending on the service used, the key "query" maybe used instead of "ip"
-		if (!obj.Has("ip")) {
-			if (obj.Has("query")) {
-				obj["ip"] := obj["query"]
-			}
-		}
 
 		out := "Public: " obj["ip"] "`nLocal: " localIPs[1] "`nLocation: " obj["city"] ", " obj["country"]
 		return out
@@ -121,6 +125,18 @@ class IP_Check
 	Present(text, timeMs:=5000, title:="IP Check Info") {
 		TrayTip text, title
 		SetTimer () => this.__OnHideTrayTip(), -1 * Abs(timeMs)
+	}
+
+	_ensure_ip_key(obj) {
+		; depending on the service used, the key "query" or "ip_address" maybe used instead of "ip"
+		if (!obj.Has("ip")) {
+			if (obj.Has("query")) {
+				obj["ip"] := obj["query"]
+			}
+			if (obj.Has("ip_address")) {
+				obj["ip"] := obj["ip_address"]
+			}
+		}
 	}
 }
 
