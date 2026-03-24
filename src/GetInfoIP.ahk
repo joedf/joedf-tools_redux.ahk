@@ -80,6 +80,10 @@ class IP_Check
 		this.request.open("GET", this.DATA_SOURCE_URL, true)
 		; set user agent
 		this.request.setRequestHeader("User-Agent", "User-Agent: curl/8.9.1")
+		; avoid cached response - https://www.autohotkey.com/boards/viewtopic.php?p=286866
+		this.request.SetRequestHeader("Pragma", "no-cache")
+		this.request.SetRequestHeader("Cache-Control", "no-cache, no-store")
+		this.request.SetRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT")
 		; setup callback
 		this.request.onreadystatechange := ObjBindMethod(this, __readyFuncName)
 		; send it
