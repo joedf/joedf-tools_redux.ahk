@@ -100,13 +100,15 @@ class IP_Check
 		if (this.request.readyState != 4)  ; Not done yet.
 			return
 		if (this.request.status == 200) { ; OK.
+			; parse the response as a json object
+			oJson := this._processJson(this.request.responseText)
+			; check if we are copying it ot the clipboard or displaying it
 			if (this._doCopyToClipboard) {
-				obj := JSON.parse(this.request.responseText)
-				this._ensure_ip_key(obj)
-				A_Clipboard := obj["ip"]
+				A_Clipboard := oJson["ip"]
 				this._doCopyToClipboard := false
 			} else {
-				sInfo := this.Parse_to_Display_String(this.request.responseText)
+				localIPs := SysGetIPAddresses()
+				sInfo := "Public: " oJson["ip"] "`nLocal: " localIPs[1] "`nLocation: " oJson["city"] ", " oJson["country"]
 				this.Present(sInfo)
 			}
 		} else {
@@ -114,21 +116,14 @@ class IP_Check
 		}
 	}
 
-	Parse_to_Display_String(sJson) {
-		obj := JSON.parse(sJson)
-		this._ensure_ip_key(obj)
-		localIPs := SysGetIPAddresses()
-
-		out := "Public: " obj["ip"] "`nLocal: " localIPs[1] "`nLocation: " obj["city"] ", " obj["country"]
-		return out
-	}
-
 	Present(text, timeMs:=5000, title:="IP Check Info") {
 		TrayTip text, title
 		SetTimer () => this.__OnHideTrayTip(), -1 * Abs(timeMs)
 	}
 
-	_ensure_ip_key(obj) {
+	_processJson(sJson) {
+		; parse JSON string to an object
+		obj := JSON.parse(sJson)
 		; depending on the service used, the key "query" or "ip_address" maybe used instead of "ip"
 		if (!obj.Has("ip")) {
 			if (obj.Has("query")) {
@@ -138,6 +133,7 @@ class IP_Check
 				obj["ip"] := obj["ip_address"]
 			}
 		}
+		return obj
 	}
 }
 
