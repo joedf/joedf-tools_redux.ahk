@@ -44,6 +44,7 @@
 class IP_Check
 {
 	__New(dataSourceUrl:="https://ipv4-check-perf.radar.cloudflare.com/api/info") {
+		this._doCopyToClipboard := false
 		this.DATA_SOURCE_URL := dataSourceUrl
 		this.request := ComObject("Msxml2.XMLHTTP")
 		this.AttachTrayTipEvents()
@@ -91,29 +92,25 @@ class IP_Check
 	}
 
 	ExecuteCopy() {
-		this.Execute("ReadyCopy")
+		this._doCopyToClipboard := true
+		this.Execute()
 	}
 
 	Ready() {
 		if (this.request.readyState != 4)  ; Not done yet.
 			return
 		if (this.request.status == 200) { ; OK.
-			sInfo := this.Parse_to_Display_String(this.request.responseText)
-			this.Present(sInfo)
+			if (this._doCopyToClipboard) {
+				obj := JSON.parse(this.request.responseText)
+				this._ensure_ip_key(obj)
+				A_Clipboard := obj["ip"]
+				this._doCopyToClipboard := false
+			} else {
+				sInfo := this.Parse_to_Display_String(this.request.responseText)
+				this.Present(sInfo)
+			}
 		} else {
 			this.Present("IP check request failed (Status = " this.request.status ")")
-		}
-	}
-
-	ReadyCopy() {
-		if (this.request.readyState != 4)  ; Not done yet.
-			return
-		if (this.request.status == 200) { ; OK.
-			sJson := this.request.responseText
-			obj := JSON.parse(sJson)
-			this._ensure_ip_key(obj)
-
-			A_Clipboard := obj["ip"]
 		}
 	}
 
