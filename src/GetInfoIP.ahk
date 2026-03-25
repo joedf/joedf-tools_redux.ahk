@@ -153,4 +153,5 @@ IP_Check_Setup_TrayMenu() {
 	}
 	A_TrayMenu.Add("Show IP info", DoNotifyIP)
 	A_TrayMenu.Add("Copy IP (Public)", DoCopyIP)
+	A_TrayMenu.Default := "Show IP info"
 }
