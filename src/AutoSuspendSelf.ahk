@@ -20,8 +20,15 @@ SetTimer CheckForProcesses, SuspendCheckInterval
 
 CheckForProcesses() {
 	global SuspendProcesses
-	doSuspend := !!(CheckAnyProcessesExist(SuspendProcesses))
+	doSuspend := false
+	doSuspend := !!(CheckIfSteamGameRunning()) || doSuspend
+	; doSuspend := !!(CheckAnyProcessesExist(SuspendProcesses)) || doSuspend
 	Suspend doSuspend
+}
+
+CheckIfSteamGameRunning() {
+	appId := RegRead("HKCU\Software\Valve\Steam", "RunningAppID") + 0
+	return appId
 }
 
 CheckAnyProcessesExist(processList) {
