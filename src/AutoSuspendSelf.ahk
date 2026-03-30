@@ -27,8 +27,11 @@ CheckForProcesses() {
 }
 
 CheckIfSteamGameRunning() {
-	appId := RegRead("HKCU\Software\Valve\Steam", "RunningAppID") + 0
-	return appId
+	try {
+		appId := RegRead("HKCU\Software\Valve\Steam", "RunningAppID") + 0
+		return appId
+	}
+	return 0
 }
 
 CheckAnyProcessesExist(processList) {
