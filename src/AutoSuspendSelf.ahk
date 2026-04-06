@@ -21,8 +21,8 @@ SetTimer CheckForProcesses, SuspendCheckInterval
 CheckForProcesses() {
 	global SuspendProcesses
 	doSuspend := false
-	doSuspend := !!(CheckIfSteamGameRunning()) || doSuspend
-	; doSuspend := !!(CheckAnyProcessesExist(SuspendProcesses)) || doSuspend
+	;;doSuspend := !!(CheckIfSteamGameRunning()) || doSuspend
+	doSuspend := !!(CheckAnyProcessesExist(SuspendProcesses)) || doSuspend
 	Suspend doSuspend
 }
 
