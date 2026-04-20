@@ -45,6 +45,7 @@ class IP_Check
 {
 	__New(dataSourceUrl:="https://ipv4-check-perf.radar.cloudflare.com/api/info") {
 		this._doCopyToClipboard := false
+		this._doToolTip := false
 		this.DATA_SOURCE_URL := dataSourceUrl
 		this.request := ComObject("Msxml2.XMLHTTP")
 		this.AttachTrayTipEvents()
@@ -76,6 +77,10 @@ class IP_Check
 		TrayTip()
 	}
 
+	__OnHideToolTip() {
+		ToolTip()
+	}
+
 	Execute(__readyFuncName:="Ready") {
 		; Make an async request
 		this.request.open("GET", this.DATA_SOURCE_URL, true)
@@ -93,6 +98,11 @@ class IP_Check
 
 	ExecuteCopy() {
 		this._doCopyToClipboard := true
+		this.Execute()
+	}
+
+	ExecuteToolTip() {
+		this._doToolTip := true
 		this.Execute()
 	}
 
@@ -117,8 +127,14 @@ class IP_Check
 	}
 
 	Present(text, timeMs:=5000, title:="IP Check Info") {
-		TrayTip text, title
-		SetTimer () => this.__OnHideTrayTip(), -1 * Abs(timeMs)
+		if (this._doToolTip) {
+			this._doToolTip := false
+			ToolTip title . "`n" . text
+			SetTimer () => this.__OnHideToolTip(), -1 * Max(0.25 * Abs(timeMs), 1000)
+		} else {
+			TrayTip text, title
+			SetTimer () => this.__OnHideTrayTip(), -1 * Abs(timeMs)
+		}
 	}
 
 	_processJson(sJson) {
@@ -135,23 +151,4 @@ class IP_Check
 		}
 		return obj
 	}
-}
-
-
-; no need if not stand alone script
-; Persistent
-; IP_Check().Execute()
-
-
-IP_Check_Setup_TrayMenu() {
-	GetInfoIP := IP_Check()
-	DoNotifyIP(ItemName, ItemPos, MyMenu) {
-		return GetInfoIP.Execute()
-	}
-	DoCopyIP(ItemName, ItemPos, MyMenu) {
-		return GetInfoIP.ExecuteCopy()
-	}
-	A_TrayMenu.Add("Show IP info", DoNotifyIP)
-	A_TrayMenu.Add("Copy IP (Public)", DoCopyIP)
-	A_TrayMenu.Default := "Show IP info"
 }
