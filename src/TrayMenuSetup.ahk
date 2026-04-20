@@ -11,6 +11,7 @@ A_TrayMenu.Add() ; Creates a separator line.
 A_TrayMenu.Add("About (webpage)", ShowAbout)
 A_TrayMenu.Add()
 A_TrayMenu.AddStandard()
+A_TrayMenu.Default := "Show IP info"
 
 ; Tray menu actions
 ShowAbout(*) {
@@ -29,16 +30,13 @@ DoCopyIP(ItemName, ItemPos, MyMenu) {
 OnMessage(0x404, AHK_NOTIFYICON) ; WM_USER + 4
 AHK_NOTIFYICON(wParam, lParam, *) {
 	global G_TrayIconClicks
-	if (lParam == 0x201) ; WM_LBUTTONUP
+	switch lParam
 	{
-		G_TrayIconClicks := 1
-		SetTimer TrayIconClickCheck, -250
-		return 0
-	}
-	else if (lParam == 0x203) ; WM_LBUTTONDBLCLK
-	{
-		G_TrayIconClicks := 2
-		return 0
+		case 0x201: ; WM_LBUTTONUP
+			G_TrayIconClicks := 1
+			SetTimer TrayIconClickCheck, -250
+		case 0x203: ; WM_LBUTTONDBLCLK
+			G_TrayIconClicks := 2
 	}
 }
 TrayIconClickCheck() {
@@ -46,6 +44,7 @@ TrayIconClickCheck() {
 	switch G_TrayIconClicks
 	{
 		case 1: GetInfoIP.ExecuteToolTip()
-		case 2: GetInfoIP.Execute()
+		; handled by A_TrayMenu.Default
+		; case 2: GetInfoIP.Execute()
 	}
 }
