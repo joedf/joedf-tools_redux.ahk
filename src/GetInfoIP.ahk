@@ -73,14 +73,6 @@ class IP_Check
 		}
 	}
 
-	__OnHideTrayTip() {
-		TrayTip()
-	}
-
-	__OnHideToolTip() {
-		ToolTip()
-	}
-
 	Execute(__readyFuncName:="Ready") {
 		; Make an async request
 		this.request.open("GET", this.DATA_SOURCE_URL, true)
@@ -130,10 +122,10 @@ class IP_Check
 		if (this._doToolTip) {
 			this._doToolTip := false
 			ToolTip title . "`n" . text
-			SetTimer () => this.__OnHideToolTip(), -1 * Max(0.25 * Abs(timeMs), 1000)
+			SetTimer () => ToolTip(), -1 * Max(0.25 * Abs(timeMs), 1000)
 		} else {
 			TrayTip text, title
-			SetTimer () => this.__OnHideTrayTip(), -1 * Abs(timeMs)
+			SetTimer () => TrayTip(), -1 * Abs(timeMs)
 		}
 	}
 
