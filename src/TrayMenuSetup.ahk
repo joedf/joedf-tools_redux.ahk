@@ -27,7 +27,6 @@ DoCopyIP(ItemName, ItemPos, MyMenu) {
 OnMessage(0x404, AHK_NOTIFYICON)
 AHK_NOTIFYICON(wParam, lParam, *) {
 	global lastHoverAction
-	ToolTip wParam . " " . lParam
 	switch lParam
 	{
 		case 0x200: ; WM_MOUSEMOVE
