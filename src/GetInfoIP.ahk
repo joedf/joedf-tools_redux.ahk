@@ -46,6 +46,7 @@ class IP_Check
 	__New(dataSourceUrl:="https://ipv4-check-perf.radar.cloudflare.com/api/info") {
 		this._doCopyToClipboard := false
 		this._doToolTip := false
+		this._doTrayTip := false
 		this.DATA_SOURCE_URL := dataSourceUrl
 		this.request := ComObject("Msxml2.XMLHTTP")
 		this.AttachTrayTipEvents()
@@ -98,32 +99,51 @@ class IP_Check
 		this.Execute()
 	}
 
+	ExecuteTrayTip() {
+		this._doTrayTip := true
+		A_IconTip := A_ScriptName . "`n" . "Checking IP info..."
+		this.Execute()
+	}
+
 	Ready() {
 		if (this.request.readyState != 4)  ; Not done yet.
 			return
 		if (this.request.status == 200) { ; OK.
 			; parse the response as a json object
 			oJson := this._processJson(this.request.responseText)
-			; check if we are copying it ot the clipboard or displaying it
-			if (this._doCopyToClipboard) {
-				A_Clipboard := oJson["ip"]
-				this._doCopyToClipboard := false
-			} else {
-				localIPs := SysGetIPAddresses()
-				sInfo := "Public: " oJson["ip"] "`nLocal: " localIPs[1] "`nLocation: " oJson["city"] ", " oJson["country"]
-				this.Present(sInfo)
+
+			; attempt to present it if were able to process it
+			try {
+				; check if we are copying it ot the clipboard or displaying it
+				if (this._doCopyToClipboard) {
+					A_Clipboard := oJson["ip"]
+					this._doCopyToClipboard := false
+				} else {
+					localIPs := SysGetIPAddresses()
+					sInfo := "Public: " oJson["ip"] "`nLocal: " localIPs[1] "`nLocation: " oJson["city"] ", " oJson["country"]
+					this.Present(sInfo)
+				}
 			}
+
 		} else {
 			this.Present("IP check request failed (Status = " this.request.status ")")
 		}
 	}
 
 	Present(text, timeMs:=5000, title:="IP Check Info") {
-		if (this._doToolTip) {
+		if (this._doToolTip)
+		{
 			this._doToolTip := false
 			ToolTip title . "`n" . text
 			SetTimer () => ToolTip(), -1 * Max(0.25 * Abs(timeMs), 1000)
-		} else {
+		}
+		else if (this._doTrayTip)
+		{
+			this._doTrayTip := false
+			A_IconTip := A_ScriptName . "`n" . text
+		}
+		else
+		{
 			TrayTip text, title
 			SetTimer () => TrayTip(), -1 * Abs(timeMs)
 		}

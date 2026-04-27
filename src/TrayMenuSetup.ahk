@@ -1,5 +1,5 @@
 ; Setup tray menu
-G_TrayIconClicks := 0
+lastHoverAction := A_Now - 10
 TraySetIcon "logo.ico"
 A_TrayMenu.Delete() ; clears the standard / default menu
 ; ---------------------------
@@ -24,27 +24,17 @@ DoCopyIP(ItemName, ItemPos, MyMenu) {
 	return GetInfoIP.ExecuteCopy()
 }
 
-; TrayIcon - Differentiate between a single click and double click
-; Based on solution by AHK user "Serenity"
-; https://www.autohotkey.com/board/topic/33843-single-click-vs-double-click-on-tray-icon/#entry214214
-OnMessage(0x404, AHK_NOTIFYICON) ; WM_USER + 4
+OnMessage(0x404, AHK_NOTIFYICON)
 AHK_NOTIFYICON(wParam, lParam, *) {
-	global G_TrayIconClicks
+	global lastHoverAction
 	switch lParam
 	{
-		case 0x201: ; WM_LBUTTONUP
-			G_TrayIconClicks := 1
-			SetTimer TrayIconClickCheck, -250
-		case 0x203: ; WM_LBUTTONDBLCLK
-			G_TrayIconClicks := 2
-	}
-}
-TrayIconClickCheck() {
-	global G_TrayIconClicks
-	switch G_TrayIconClicks
-	{
-		case 1: GetInfoIP.ExecuteToolTip()
-		; handled by A_TrayMenu.Default
-		; case 2: GetInfoIP.Execute()
+		case 0x200: ; WM_MOUSEMOVE
+			if (A_Now - lastHoverAction > 5) {
+				GetInfoIP.ExecuteTrayTip()
+				lastHoverAction := A_Now
+			}
+		;case 0x201: ; WM_LBUTTONUP
+		;case 0x203: ; WM_LBUTTONDBLCLK
 	}
 }
