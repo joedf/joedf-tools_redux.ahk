@@ -101,7 +101,6 @@ class IP_Check
 
 	ExecuteTrayTip() {
 		this._doTrayTip := true
-		A_IconTip := A_ScriptName . "`n" . "Checking IP info..."
 		this.Execute()
 	}
 
