@@ -24,6 +24,11 @@ CheckForProcesses() {
 	;;doSuspend := !!(CheckIfSteamGameRunning()) || doSuspend
 	doSuspend := !!(CheckAnyProcessesExist(SuspendProcesses)) || doSuspend
 	Suspend doSuspend
+
+	;Suspend doSuspend
+	; Do partial "suspend" using #HotIf flag instead
+	global G_SUSPEND
+	G_SUSPEND := doSuspend
 }
 
 CheckIfSteamGameRunning() {
