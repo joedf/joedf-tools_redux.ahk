@@ -13,6 +13,8 @@ A_TrayMenu.Add()
 A_TrayMenu.AddStandard()
 A_TrayMenu.Default := "Show IP info"
 
+G_Custom_app_path := "~custom-shortcut.lnk"
+
 ; Tray menu actions
 ShowAbout(*) {
 	Run "https://github.com/joedf/joedf-tools_redux.ahk"
@@ -34,7 +36,9 @@ AHK_NOTIFYICON(wParam, lParam, *) {
 				GetInfoIP.ExecuteTrayTip()
 				lastHoverAction := A_Now
 			}
-		;case 0x201: ; WM_LBUTTONUP
+		case 0x201: ; WM_LBUTTONUP
+			if FileExist(G_Custom_app_path)
+				Run(G_Custom_app_path)
 		;case 0x203: ; WM_LBUTTONDBLCLK
 	}
 }
